@@ -13,8 +13,7 @@ public class Example3 {
 		
 		
 		public void printAll2() {
-			Node temp=next;
-			System.out.printf("%d ", this.value);
+			Node temp=this;
 			while(temp!=null) {
 				System.out.printf("%d ", temp.value);
 				temp = temp.next;
