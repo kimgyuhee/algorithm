@@ -15,15 +15,15 @@ class Node {
 	public void addChild(Node child) {
 		this.children.add(child);
 	}
+
 	
-	public void print() {
-		
-	}
 	
 	public boolean contains(int value) {
-		if(children.contains(value))
-			return true;
+		if(this.value==value) return true;
+		for(Node child : children)
+			if(child.contains(value)) return true;
 		return false;
+		
 	}
 }
 public class Example8 {
@@ -53,6 +53,5 @@ public class Example8 {
 		System.out.println(root.contains(4));
 		System.out.println(root.contains(40)); 
 
-		root.print();
 	}
 }
