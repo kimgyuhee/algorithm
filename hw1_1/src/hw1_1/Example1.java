@@ -6,12 +6,23 @@ public class Example1 {
 			System.out.printf("%d ", i);
 	}
 	
+	//재귀함수 사용
+	static void insert(int[] a, int index, int value) {
+		if(index<a.length) {
+			int next=a[index];
+			a[index]=value;
+			insert(a, index+1, next);
+		}
+	}
+	/**************************
+	//반복문 사용
 	static void insert(int[] a, int index, int value) {
 		for(int i=a.length-1 ; i>index; i--) {
 			a[i]=a[i-1];
 		}
 		a[index]=value;
 	}
+	***************************/
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
