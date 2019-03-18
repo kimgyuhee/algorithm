@@ -1,0 +1,71 @@
+﻿19.03.18
+
+수업 링크 : https://o365skhu-my.sharepoint.com/:w:/r/personal/lsj_office_skhu_ac_kr/_layouts/15/Doc.aspx?sourcedoc=%7BA5DA7CE9-F838-4220-AFAE-4619DEA95FD8%7D&file=03-2%20%EA%B3%A0%EA%B8%89%20%EC%A0%95%EB%A0%AC.docx&action=default&mobileredirect=true
+
+고급정렬
+
+학습목표 : 병합 정렬 알고리즘을 학습한다.
+	퀵 정렬 알고리즘을 학습한다.
+
+
+merge sort 알고리즘
+mergeSort(A[ ], start, end)  
+{
+	if (start < end) then {		정렬할 부분의 크기가 1 이하이면, 그냥 리턴한다.
+		middle ← (start + end)/2;  	(1)  start, end의 중간 지점 계산
+		mergeSort(A, start, middle);   	(2)  중간 지점을 기준으로 앞부분 정렬
+		mergeSort(A, middle+1, end); 	(3)  중간 지점을 기준으로 뒷부분 정렬   
+		merge(A, start, middle, end);  	(4)  병합
+	}
+}  
+merge(A[ ], start, middle, end)  {
+          정렬되어 있는 두 배열 A[start ... middle]와 A[middle+1 ... end]을 합하여
+          정렬된 하나의 배열 A[start ... end]을 만든다.  
+}
+
+병합(merge) 정렬
+merge 메소드 : 수행 시간 O(N)
+mergeSort 메소드 : O(logN)
+=> 따라서 O(NlogN)
+
+병합할 때 n에 메모리 크기가 필요하다
+temp 배열 없이 병합정렬을 할 수 없는가?
+정렬할 수 없습니다. 예시를 들어서 설명해주기
+A[3, 4, 1, 2, 5] 3과 1을 비교하여 1을 0인덱스에 넣고 3을 저장할 공간을 만들어줘야하는데
+그럼 1, 2, 5 라고 정렬할 배열이 흐트러 지기 때문에
+
+
+
+퀵 정렬
+
+알고리즘
+partition(A[ ], p, r) {
+	x ← A[r];			▷ 기준원소 (pivot)
+	i ← p-1;			▷ i는 1구역의 끝지점
+	for j ← p to r-1		▷ j는 3구역의 시작 지점
+		if (A[j] ≤ x) then A[++i] ↔ A[j];
+▷ i 값 증가 후 A[i] ↔ A[j] 교환     
+	A[i+1] ↔ A[r];		▷ 기준 원소와 2구역 첫원소 교환     
+	return i+1;		▷ 기준 원소의 위치 리턴
+} 
+
+기준값을 정한다.
+앞에 인덱스부터 비교하며 전진한다.
+기준값보다 인덱스 값이 작으면 i의 값이 증가 후 swap
+인덱스의 값이 더 크면 j의 값 증가후 전진
+만약 기준 값과 같은 값이 있으면 2구역에 보내는 것이 더 간편
+1구역에 보내도 상관은 없음
+
+퀵 정렬 수행 시간
+평균 O(NlogN)
+worst case : 정렬된 배열을 정렬할 때
+* 이미 정렬된 배열을 정렬할 때 좋은 정렬은 bubble sort
+
+퀵 정렬과 병합 정렬 비교
+병합 정렬의 수행시간은 언제나 O(NlogN)이다.
+병합 정렬의 메모리 요구량은 언제나 O(N) 이다.
+
+퀵 정렬의 수행시간은 평균 O(NlogN) 이지만, worst case O(N^2)이다.
+그렇지만 worst case는 극히 드물다.
+퀵 정렬의 메모리 요구량은 O(1)이다.
+-> 위와 같은 장단점 때문에, 실무에서는 주로 퀵 정렬을 사용
