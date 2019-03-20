@@ -5,12 +5,13 @@ import java.util.Scanner;
 public class Example5 {
 
 	static int count(int x, int y, int d) {
-		int count=(y-x)/d;
+		int count=(y-x)/d-1;
 		
 		if(x>=y)
 			return 0;
-		else if((y-x)/d==0)
-			return count-1;
+		
+		if((y-x)/d==0)
+			return count;
 		else
 			return count+1;
 		
