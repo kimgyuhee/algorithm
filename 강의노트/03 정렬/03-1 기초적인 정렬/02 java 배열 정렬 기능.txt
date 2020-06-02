@@ -110,3 +110,81 @@ public class Person implements Comparable<Person> {
 		return this.age-p.age;
 	}
 }
+
+
+
+****************************************************************
+
+
+
+3. Comparator 인터페이스
+
+1) 순서 기준이 몇 개인가 ?
+정수의 경우 어느 수가 앞이고, 어느 수가 뒤인지 정해져 있따
+날짜의 경우에도 어느 날짜가 앞이고 어느 날짜가 뒤인지 정해져 있다
+	-> 요일, 월, 가나다, abs 순서도 정해져 있다.
+
+그런데 사람의 순서는 여러가지 기준이 있을 수 있다.
+	이름 순서, 나이 순서, 키 순서, 재산 순서 등등
+
+순서 기준이 한 개인 경우
+	- 순서 기준이 한개인 경우에는, 그 순서를 비교하는 메소드를 그 객체에 구현하는 것이 좋다.
+	즉, Integer 클래스, Date 클래스는 Comparable 인터페이스를 구현하여
+	그 클래스에 CompareTo 메소드를 구현한다.
+
+순서 기준이 여러개인 경우
+	- 순서 기준이 여러 개인 경우, 그 각각의 비교방법을 별도의 클래스에 구현하는 것이 좋다.
+	즉, Person 클래스에 비교 방법을 구현하는 것보다,
+	PersonNameComparator, PersonAgeComparator 등 비교 클래스를
+	따로 구현하는 것이 좋다.
+	-> 이 비교 클래스는 Comparator 인터페이스를 구현하여 compare 메소드를 구현해야한다.
+
+
+2) Comparator 인터페이스
+interface Comparator<T> {
+	int compare (T obj, T obj);
+}
+
+Comparator 인터페이스는 compare 메소드를 포함한다.
+compare 메소드는, obj1 객체와 obj2 객체를 비교하여, obj1 객체가 크면 양의 정수를 리턴
+obj1 객체가 작으면 음의 정수를 리턴하고, 두 값이 동일하면 0을 리턴한다.
+
+
+3) Person 클래스 배열 정렬
+Person.java
+
+Public class Person {
+	String name;
+	int age;
+
+	public Person(){} // 생성자
+	
+	//getter 만들기
+	
+	@Override
+	public boolean equals(Object obj) {
+		if ((obj instanceof Person) == false) return false;
+		Person p = (Person)obj;
+		return (this.name == null ? p.name == null : this.name.equals(p.name)) 
+		&& this.age == p.age; 
+	}
+
+	@Override
+	public String toString() {
+		return String.format("Person{name=\"%s\", age=%d}", name, age);
+	}
+}
+
+PersonNameComparator.java
+
+public class PersonNameComparator implements Comparator<Person> {
+	@Overide
+	public int compare(Person p1, Person p2) {
+		int r = p1.name.compareTo(p2.name);  // 먼저 이름(name)을 비교한다.
+		if (r != 0) return r; // 이름이 같지 않다면, 이름 비교 결과를 리턴한다.
+		return p1.age - p2.age; // 이름이 같다면, 나이(age) 비교 결과를 리턴한다.
+	}
+} 
+
+
+
