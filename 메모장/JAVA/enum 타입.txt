@@ -1,0 +1,115 @@
+<<<<< enum 타입 >>>>>
+
+# 학습목표
+- Java의 enum 타입의 장점과 활용방법을 학습한다.
+
+---------------------------------------------------------------------------------------------------
+
+## 내용을 보기 전 내가 아는 지식
+X 없음 X
+	-> 공부를 하게 된 후 알게된 내용
+	
+	BloodType이 클래스일 경우에, switch 문을 사용할 수 없으므로 if 문으로 구현
+	BloodType이 enum 타입일 경우에 switch 문을 사용할 수 있다.
+
+	Java switch 문에는 int, String, enum 타입을 사용할 수 있다.
+
+	##결론
+	Java enum 타입은 참조형이고, enum 타입의 값들은 객체이다.
+	Java enum 타입은 클래스 타입과 매우 유사하다.
+
+	enum 타입이 클래스 타입과 다른점은 enum 타입 내부에서 생성한 객체 인스턴스만 사용할
+	수 있고, 객체를 만들 수 없다는 점이다. 그리고 내부에서 생성한 객체 인스턴스들을 상수처럼
+	사용한다
+	
+	클래스로 구현하는 편 보다 enum 타입으로 구현하는 편이 훨씬 간결하다.
+
+---------------------------------------------------------------------------------------------------
+
+-> 혈액형을 클랴스로 구현한 코드 살펴보기
+	package : bloodType1	
+	1. BloodType.java
+	
+	public class BloodType {
+		// 클래스 내부에서만 객체를 생성할 수 있기 때문에
+		혈액형 객체를 생성한다. -> 상수처럼 사용
+		public static final BloodType A = new BloodType("A");
+		public static final BloodType B = new BloodType("B");
+		public static final BloodType O = new BloodType("O");
+		public static final BloodType AB = new BloodType("AB");
+
+		private String name;
+
+		// 생성자가 private 이므로, BloodType 클래스 외부에서는 생성자를
+		호출할 수 없다. 따라서 BloodType 외부에서는 BloodType 객체를 생성할 수 없다.
+		private BloodType(String name) {
+			this.name = name;	
+		}
+
+		@Override
+		public String toString() { }
+		public static BloodType valueOf(String name) {}
+		public boolean canGiveTo(BloodType recipient) {}
+		public static BloodType[] values( ) {}
+	
+	}
+
+	
+	2. Person.java
+	
+	public class Person {
+		String name;
+		int age;
+		BloodType bloodType;
+	
+		public Person(String name, int age, BloodType bloodType) {}
+
+		// getter 생성
+
+		@Override
+		public boolean equals(Object obj) {
+			if( ( obj instanceof Person ) == false ) return false;
+			Person p = (Person) obj;
+			return (this.name == null ? p.name ==null : this.name.equals(p.name))
+			&& this.bloodType == p.bloodType && this.age == p.age;
+			// this.bloodType == p.bloodType : bloodType 멤버변수 값이 참조 변수
+			이지만 equlity 비교와 identity 비교의 결과가 동일하기 때문에,
+			identity 비교로 구현하였다.
+		}
+
+		@Override
+		public Stirng toString() {}
+	
+	}
+
+
+-> 이것을 enum 타입으로 구현하면 코드가 간결해진다.
+
+-> 패키지 내에 이름이 같은 클래스가 두 개면 컴파일 에러가 발생한다.
+	정확하게 얘기하자면, 패키지내에서 class, interface, enum 들의 이름이 같은 것이 있으면
+	컴파일 에러가 발생한다.
+
+	package : bloodType2
+	1. BloodType
+
+	public enum BloodType {
+		A, B, O, AB;
+
+		public boolean canGiveTo(BloodType recipient) {
+			if ( this == recipient ) return true;
+			if ( this == O ) return true;
+			if ( recipient == AB ) return true;
+			return false;
+		}
+	}
+
+	-> 생성자를 private 로 선언할 필요없다.
+	-> 생성자를 private로 선언하지 않아도 외부에서는 BloodType enum 타입의 객체 인스턴스
+	를 생성하지 못한다.
+	-> 혈액형 객체 인스턴스는 4개뿐이다.
+	-> enum 타입의 객체 인스턴스 이름을 문자열로 리턴하는 toString 메소드가 자동으로 생성
+	-> enum 타입의 객체 인스턴스는 identity 비교와 equality 비교의 결과가 같다.
+	값이 같은 객체 인스턴스가 여러개 일 수 없기 때문이다.
+		그래서 equals 메소드를 재정의 할 필요가 없다. (valueOf, value도 마찬가지)
+
+
