@@ -1,0 +1,160 @@
+특수 정렬 알고리즘
+
+학습목표
+counting sort
+radio sort
+
+
+1. 특수 정렬 알고리즘 소개
+정렬할 값들이 단순할 경우, 이 단순함을 이용해서 O(N) 시간에 정렬할 수 있는 경우가 있다.
+즉, 정렬할 값들이 특수한 성질을 만족할 경우, 그 성질을 이용해서 O(N) 시간에
+정렬하는 알고리즘들을 특수 정렬 알고리즘이라고 한다.
+
+특수 정렬 알고리즘 중에서 기수 정렬(radio sort)와 계수 정렬(counting sort)를 소개한다.
+
+
+2. Counting sort -> 계수 정렬
+
+값의 종류가 많지 않을 때, O(N) 시간으로 정렬할 수 있다
+	
+	(1) 정렬할 배열에 들어있는 값들 각각의 수를 세기 위한 count 배열을 생성한다.
+	값의 종류가 많지 않다면, count 배열의 크기도 크지 않을 것이다.
+	
+	(2) 정렬할 배열을 선형 탐색하며, 각 값들의 수를 센다.
+		
+	(3) 각 값들의 수는 알고 있다는 것은, 정렬 결과 배열에 각 값들이 순서대로 몇개씩
+	들어있어야 하는지 안다는 것이다. 정렬 결과 배열을 생성한다.
+
+
+ 	1) counting sort 수행 시간
+
+	입력 배열의 크기 = N
+	값의 종류의 수 =M
+
+	수행시간: O(N+M)
+	메모리 요구량 : O(N+M)
+
+	N>M -> 	O(N) | O(N)
+	N<M -> 	O(M) | O(M)
+
+	2) Tree Map
+	
+	counting sort를 구현할 때, 자바의 Tree MAP 클래스가 유용하다.
+							 ### 이용된 자료구조
+	TreeMap 클래스는 Map 인터페이스를 상속하였다.	-> O(logN) : 레드블랙트리
+	HashMap 클래스도 Map 인터페이스를 상속하였다	-> O(1) : 해시 테이블
+	그래서 이 두 클래스의 사용법은 같다.
+
+		- 데이터 저장	: map.put(key, value)
+		- 데이터 값 조회 	: map.get(key)
+		- 데이터 제거	: map.remove(key)
+
+	레드 블랙 트리는 이진 트리이므로, TreeMap 크래스의 데이터 목록은 키 값을 기준으로
+	정렬되어 있다.
+	
+	즉, HashMap 클래스의 keySet() 메소드가 리턴하는 자료 목록에는 키 값들이 임의의 순서
+	TreeMap 클래스의 keySet() 메소드가 리턴하는 자료목록에는 키 값들이 정렬된 순서
+	그래서 counting sort를 구현할 때 , TreeMap 클래스가 유용하다.
+
+
+	# 구현1
+
+	public static void countiongSort(char[] a) {
+		Map<Character, Integer> countMap = new TreeMap<>();
+		for ( char c : a ) {
+			Integer i = countMap.get(c);
+			if ( i == null ) i=0;
+			countMap.put( i+1, c );
+		}
+
+		int index=0;
+
+		for ( char c : countMap.keySet( ) ) {
+			for(int i=0; i<countMap.get(c) ; i++) {
+				a[index++]=c;	
+			}
+		}
+	}
+
+
+	# 구현2 - int 배열 counting sort
+
+	public static void countingSort(int[] a, int maxValue) {
+		int[] count = new int [maxValue] ;
+		for(int i=0; i<a,length; i++) {
+			++count[a[i]];
+		
+		int index=0;
+
+		for(int i=0; i<a.length ; i++) {
+			for(int j=0; j<count[i]; j++) {
+				a[index++]=i;	
+			}
+		}
+		
+	}
+	
+
+
+
+
+3. radix sort -> 기수 정렬
+
+1) 용어 정리
+
+	digit
+	십진수의 digit는 10개이다. (0~9)
+	이진수의 digit는 2개이다. (0~1)
+	16진수의 digit는 16개이다. (0~F)
+
+	radix
+	digit의 수를 radix라고 한다
+	-> 기수 정렬은, 정렬할 데이터의 radix가 작은 경우에 활용할 수 있다.
+
+
+2) 설명
+
+	ORDER BY 키, 몸무게
+	순서대로 정렬한다고 할 때,
+	(1) 먼저 몸무게 순서로 정렬하고,
+	(2) 그 다음 키 순서 정렬하면, 몸무게 -> 키
+	
+	대부분의 데이터에서 자릿수는 제한적이다.
+	예를 들어 자바 int의 값의 범위는 -이십 몇억 ~ + 이십 몇억이다.
+	이십몇억은 십진수의 10자리이고, 이진수로 32자리이다.
+
+	즉 대부분의 데이터에서 자릿 수는 상수이다.
+	그런데 각 자리의 정렬을 O(NlogN) 시간에 한다면, radix의 시간도 O(NlogN) 시간이 된다.
+	각 자리의 정렬을 O(N) 시간에 한다면 radix 시간도 O(N) 시간이 된다.
+
+	각 자리의 값의 수는 digit 수와 같다. digit 수는 작기 때문에 counting sort를 적용해보자
+
+
+3) 구현
+
+	#구현1 - 양의 정수 배열
+
+	swap ( int [ ] a , int i , int j )
+
+	static void countingSort ( int [ ] a, int nth ) {
+		int [ ] count = new int[16];
+		for ( int value : a ) {
+			int digit = value >> (nth *4) & 0xF ; // nth 자리의 값을 구함
+			++count[digit]; // digit 값 count 증가
+
+		// nth 자리의 값을 기준으로 정렬했을 때, 각 값의 시작 위치 계산.
+		int[] index = new int[16];
+		index[0]=0;
+		for(int i=1; i<index.length; i++)
+			index[i]=index[i-1]+count[i-1];
+
+		// 위에서 계산한 시작위치를 사용하여 값들을 temp 배열에 복사함
+
+		// 정렬된 temp 배열의 값을 입력 배열에 복사
+
+
+	}
+
+
+
+
