@@ -7,7 +7,160 @@
 
 ------------------------------------------------------------------------------------
 
+1. 기본 개념
 
+1) 레코드 필드, 키
+
+	레코드(recored)
+	개체에 대해 수집된 모든 정보를 포함하도 있는 저장단위
+	예) 사람의 레코드 : 주민번호, 이름, 집 주소, 집 전화번호, 직장 전화번호
+
+	필드(field)
+	레코드에서 각각의 정보를 나타내는 부분
+	예) 위 사람의 레코드에서 각각의 정보를 나타내는 부분 (주민번호, 이름, 집주소)
+	
+	검색키(search key)또는 키(key)
+	다른 레코드와 중복되지 않도록 각 레코드를 대표할 수 있는 필드
+	키는 하나의 필드로 이루어질 수도 있고, 두 개 이상의 필드로 이루어질 수도 있다.
+
+	검색트리(search tree)
+	각 노드가 규칙에 맞도록 하나씩의 키를 갖고 있다.
+	이를 통해 해당 레코드가 저장된 위치를 알 수 있다.
+
+	루트 노드(root node)
+	트리의  제일 위 부모 노드를 루트 노드라고 한다.
+
+	리프 노드(leaf node)
+	트리의 제일 아래 자식 노드들을 리프 노드라고 한다.
+
+
+
+2) 이진 검색 트리 개념 (Binary Search Tree : BST)
+
+	각 노드는 하나씩의 키 값을 갖는다. 각 노드의 키 값은 다르다.
+	최상의 레벨에 루트 노드가 있고, 각 노드는 최대 두 개의 자식을 갖는다.
+	임의의 노드의 키 값은 자신의 왼쪽 자식 노드의 키 값보다는 크고, 오른쪽 값보다 작다.
+
+	
+
+2. 이진 트리 탐색
+
+Node findNode( int value )
+	재귀호출로 구현하자
+
+	findNode #1
+
+	findNode(int value)
+		=> 내가 찾아야할 value
+		* 여기서 this는 root 노드 !
+
+	내가 25를 찾는다고 가정하자 root노드의 값은 30이다
+		findNode(25);
+		this.value = 30
+		this.left =20, : this 값이 20으로 변경
+		findNode(25)
+		this.right =25 this 값이 25로 변경
+		 
+
+	class Node {
+		int value;
+		Node left, right;
+
+		public Node findNode(int value) {
+			if(value<this.value) {
+				if(this.left==null) return null;
+				return this.left,findNode(value);
+			}else if(value>this.value) {
+				if( this.right == null ) return null;
+				return this.right.findNode(value);
+			}else
+				return this;
+		}
+	}
+
+	
+	findNode #2
+	class Node {
+		int value;
+		Node left, right;
+	
+		public static Node findNode(Node node, int value) {
+			if(node == null ) return null;
+			if(value < node.value) return node.left.findNode(value);
+			esle if (value > node.value) return node.right.findNode(value);
+			else return node;
+		}
+	}
+
+
+
+3. 이진 트리 ADD
+
+	class Node {
+		int value;
+		Node left, right;
+
+		public void add(int value) {
+			if(this.value>value) {
+				if(this.left == null ) this.left = new Node(value);
+				this.left.add(value);
+			}else if(this.value < value) {
+				if(this.right == null) this.right = new Node(value);
+				this.right.add(value);
+			}
+		}
+	}
+
+
+4. 노드 삭제
+
+1) 자식이 없는 노드 remove
+
+2) 자식이 한 개인 노드 삭제
+
+3) 자식이 두 개인 노드 삭제
+
+	구현 #1
+	if(left != null && right !=null) {
+		int temp = this.right.getLeftMostChildValue();
+		int value=temp;
+		right.remove(temp, this);
+	}else if (left != null || right !=null) {
+		Node child;
+		if(this.left!= null) child = this.left;
+		else child = this.right;
+		if(parent.left == this ) parent.left =child;
+		esle parent.right =child;
+	}else {
+		if(parent.left==this) parent.left = null;
+		else parent.right = null;
+	}
+
+
+	구현 #2
+	if(left != null && right !=null) {
+		int temp = this.right.getLeftMostChildValue();
+		int value=temp;
+		right.remove(temp, this);
+	}else {
+		Node child;
+		if(this.left!= null) child = this.left;
+		else child = this.right;
+		if(parent.left == this ) parent.left =child;
+		esle parent.right =child;
+	}
+
+
+	구현 #3
+	if(left != null && right !=null) {
+		int temp = this.right.getLeftMostChildValue();
+		int value=temp;
+		right.remove(temp, this);
+	}else {
+		Node child=(this.left!= null)? this.left : this.right;
+		if(parent.left ==this) parent.left = child;
+		else parent.right = child;
+	}
 
 
 	
